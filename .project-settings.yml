@@ -10,7 +10,15 @@ ghc-args: []
 modules:
   Main(src/Main.hs):
     filename: src/Main.hs
+  TuringMachine:
+    filename: src/Data/TuringMachine.hs
   Tape:
     filename: src/Data/Tape.hs
-  TapeAlphabet:
-    filename: src/Data/TapeAlphabet.hs
+  Util:
+    filename: src/Data/Util.hs
+  State:
+    filename: src/Data/State.hs
+  Alphabet:
+    filename: src/Data/Alphabet.hs
+  Movement:
+    filename: src/Data/Movement.hs

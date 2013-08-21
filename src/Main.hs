@@ -1,23 +1,33 @@
--- | Main entry point to the application.
-
 module Main where
 
-import Tape
-import TapeAlphabet
+import Alphabet
+import Movement
+import State
+import qualified Tape as T
+import TuringMachine as TM
 
-data Alphabet = Start | Blank | Symbol Int
+data Bin = Zero | One
+         deriving (Eq, Ord, Enum)         
 
--- | The main entry point.
+instance Show Bin where
+    show Zero = "0"
+    show One  = "1"
+
+-- |Replace every symbol in the input tape with '1'
+transitionFunction :: State Char -> Alphabet Bin -> (State Char, Alphabet Bin, Movement)
+transitionFunction SStart sym        = (State 'a', sym,        R)
+transitionFunction (State 'a') Blank = (Halt,      Blank,      S)
+transitionFunction (State 'a') _     = (State 'a', Symbol One, R)
+transitionFunction _ _ = error "Length does not match!"
+
+content = [Start, Symbol Zero, Symbol Zero, Symbol Zero, Symbol Zero, Symbol Zero]
+
+tape = iterate T.moveLeft (T.fromList content) !! 6
+
+machine = TM.init tape transitionFunction
+
 main :: IO ()
 main = do
-    putStrLn (show (moveLeft (iterate (moveRight . write (Symbol 1)) empty !! 10)))
-
-
-instance Show Alphabet where
-    show Start        = ">"
-    show Blank        = "[]"
-    show (Symbol num) = show num
-
-instance TapeAlphabet Alphabet where
-    start = Start
-    blank = Blank
+    putStrLn (show tape)
+    putStrLn (show (getOutput (compute machine)))
+    putStrLn "ready!"

@@ -1,13 +1,13 @@
 module Tape where
 
-import TapeAlphabet
+import Alphabet
 
 -- Tape data type
 -- each tape has a left list, a right list and the current head
-data Tape a = Tape [a] a [a]
+data Tape a = Tape [Alphabet a] (Alphabet a) [Alphabet a]
 
-empty :: TapeAlphabet a => Tape a
-empty = Tape (repeat blank) blank (repeat blank)
+empty :: Tape a
+empty = Tape (repeat Blank) Blank (repeat Blank)
 
 moveLeft :: Tape a -> Tape a
 moveLeft (Tape (l:left) head right) = Tape left l (head:right)
@@ -15,11 +15,14 @@ moveLeft (Tape (l:left) head right) = Tape left l (head:right)
 moveRight :: Tape a -> Tape a
 moveRight (Tape left head (r:right)) = Tape (head:left) r right
 
-read :: Tape a -> a
+read :: Tape a -> Alphabet a
 read (Tape _ head _) = head
 
-write :: a -> Tape a -> Tape a
+write :: Alphabet a -> Tape a -> Tape a
 write elem (Tape left _ right) = Tape left elem right
+
+fromList :: [Alphabet a] -> Tape a
+fromList = foldl (\t x -> moveRight (write x t)) empty
 
 showSnippet :: Show a => Int -> Tape a -> String
 showSnippet num (Tape left head right) = showList' left' ++ "->" ++ show head ++ "<-" ++ showList' right'
