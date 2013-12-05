@@ -8,3 +8,4 @@ sndOf3 (_, x, _) = x
 
 thdOf3 :: (a, b, c) -> c
 thdOf3 (_, _, x) = x
+
