@@ -1,5 +1,7 @@
 module Tape where
 
+import Prelude hiding (read)
+
 import Alphabet
 
 -- Tape data type
@@ -14,6 +16,16 @@ moveLeft (Tape (l:left) head right) = Tape left l (head:right)
 
 moveRight :: Tape a -> Tape a
 moveRight (Tape left head (r:right)) = Tape (head:left) r right
+
+isAtStart :: Tape a -> Bool
+isAtStart (Tape _ Start _) = True
+isAtStart _                = False
+
+rewind :: Tape a -> Tape a
+rewind = until isAtStart moveLeft
+
+fastForward :: Tape a -> Tape a
+fastForward = until isAtStart moveRight
 
 read :: Tape a -> Alphabet a
 read (Tape _ head _) = head
